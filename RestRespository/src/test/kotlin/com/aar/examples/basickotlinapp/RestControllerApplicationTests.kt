@@ -1,4 +1,4 @@
-package com.aar.examples.RestRespository
+package com.aar.examples.basickotlinapp
 
 import org.junit.Test
 import org.junit.runner.RunWith

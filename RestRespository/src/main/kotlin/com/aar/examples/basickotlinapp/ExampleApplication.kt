@@ -1,11 +1,11 @@
-package com.aar.examples.RestRespository
+package com.aar.examples.basickotlinapp
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class RestControllerApplication
+class ExampleApplication
 
 fun main(args: Array<String>) {
-	runApplication<RestControllerApplication>(*args)
+	runApplication<ExampleApplication>(*args)
 }
