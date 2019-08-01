@@ -5,6 +5,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 data class MyForm(val name: String, val country: String)
+data class SearchFrom(val text: String)
 
 @Controller
 class ThymeleafController {
@@ -24,5 +25,36 @@ class ThymeleafController {
     @PostMapping("/myform")
     fun myFormSubmit(@ModelAttribute myForm: MyForm): String {
         return "formTemplateResult.html"
+    }
+
+
+    @GetMapping("/myList")
+    fun myList(model: Model): String {
+
+        val myList = listOf(
+                MyForm( "Uno",  "ES"),
+                MyForm( "Dos",  "EN"),
+                MyForm( "Tres", "GR")
+        )
+        var searchForm = SearchFrom("");
+
+        model.addAttribute("myList", myList)
+        model.addAttribute("searchForm",searchForm)
+        return "listTemplate"
+    }
+
+    @PostMapping("/myList")
+    fun myListSubmit(@ModelAttribute searchForm: SearchFrom, model: Model): String {
+
+
+        val myList = listOf(
+                MyForm( "Uno",  "ES"),
+                MyForm( "Dos",  "EN"),
+                MyForm( "Tres", "GR")
+        ).filter{ it.name.contains( searchForm.text, true)}
+
+        model.addAttribute("myList", myList)
+        model.addAttribute("searchForm", searchForm)
+        return "listTemplate"
     }
 }
