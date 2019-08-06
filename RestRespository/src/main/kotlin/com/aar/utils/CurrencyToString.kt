@@ -1,10 +1,21 @@
 package com.aar.utils
 
+import kotlin.math.pow
+
+fun main(args: Array<String>) {
+    println("Números")
+    val conversor = CurrencyToString()
+    for (n in 9999..10010) {
+        val str = conversor.convertir(n);
+        println("$n - $str")
+    }
+}
+
 class CurrencyToString {
 
     val sencillos = mapOf(
             0   to "cero",
-            1   to "uno",
+            1   to "un",
             2   to "dos",
             3   to "tres",
             4   to "cuatro",
@@ -32,7 +43,7 @@ class CurrencyToString {
             26  to "ventiseis",
             27  to "ventisiete",
             28  to "ventiocho",
-            29  to "ventinueve"
+            29  to "ventinueve",
             30  to "treinta",
             40  to "cuarenta",
             50  to "cincuenta",
@@ -40,7 +51,7 @@ class CurrencyToString {
             70  to "setenta",
             80  to "ochenta",
             90  to "noventa",
-            100 to "cien",
+            100 to "ciento",
             200 to "doscientos",
             300 to "trescientos",
             400 to "cuatrocientos",
@@ -54,7 +65,58 @@ class CurrencyToString {
             1000000000000 to "billón")
 
 
-    fun esCompuestoCoordinado( numero:Int) : Boolean = numero in 31..99 && sencillos[numero] == null
-    fun
+    fun normalizar(numero:String):String {
+        return when(numero) {
+            "un" -> "un euro"
+            "ciento" -> "cien euros"
+            else -> "$numero euros"
+        }
+    }
 
+    fun esCompuestoCoordinado( numero:Int) : Boolean = numero in 31..99 && sencillos[numero] == null
+
+
+    fun calcularCompuestoCoordinado( numero: Int) : String?
+    {
+        if (esCompuestoCoordinado(numero) || true) {
+
+            var valorFinal = ""
+            val longitud = numero.toString().length
+            var str = numero.toString().reversed();
+
+            for ( index in longitud-1 downTo 0) {
+                var n:Int = str.substring(index,index+1).toInt()
+                if ( n  > 0) {
+                    n = n * 10f.pow(index).toInt()
+                    var valor = sencillos[n]
+                    valorFinal = if (index == 0 && numero < 100) "$valorFinal y $valor" else "$valorFinal $valor"
+                }
+            }
+            return valorFinal
+        } else {
+            println("No es compuesto coordinados")
+            return null;
+        }
+    }
+
+    fun calcularCompuestoYuxtapuesto( numero: Int) : String?
+    {
+        var valorFinal = ""
+        val longitud = numero.toString().length
+        var str = numero.toString().reversed();
+
+        for ( index in longitud-1 downTo 0) {
+            var n:Int = str.substring(index,index+1).toInt()
+            n = if (index != 0) n * index * 10 else n
+            var valor = sencillos[n]
+            valorFinal = if ( index == 0) "$valorFinal y $valor" else "$valorFinal $valor"
+        }
+        return valorFinal
+    }
+
+    fun convertir( numero:Int) : String
+    {
+        var str = sencillos[numero] ?: calcularCompuestoCoordinado(numero) ?: "ERROR"
+        return normalizar(str)
+    }
 }
